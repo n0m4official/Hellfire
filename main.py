@@ -21,7 +21,8 @@ initial_cogs = [
     "cogs.config",
     "cogs.utility",
     "cogs.anti_raid",
-    "cogs.welcome"
+    "cogs.welcome",
+    "cogs.assistance"
 ]
 
 @bot.event
