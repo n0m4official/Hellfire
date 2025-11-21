@@ -17,11 +17,11 @@ bot = commands.Bot(intents=intents)
 bot.db = Database()
 
 initial_cogs = [
-    "cogs.cleanup",
-    "cogs.config",
-    "cogs.utility",
-    "cogs.anti_raid",
-    "cogs.welcome"
+    "cogs/cleanup.py",
+    "cogs/config.py",
+    "cogs/utility.py",
+    "cogs/anti_raid.py",
+    "cogs/welcome.py"
 ]
 
 @bot.event

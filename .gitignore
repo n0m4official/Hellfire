@@ -1,2 +1,12 @@
 .env
-.json
+*.json
+*.vscode/
+*.DS_Store
+*.db
+*.cpython-version
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
