@@ -2,8 +2,10 @@ import nextcord
 from nextcord.ext import commands
 from dotenv import load_dotenv
 import os
+import asyncio
 
 from database import Database
+from scheduler import auto_clean_loop
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -12,20 +14,26 @@ intents = nextcord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(intents=intents)
-db = Database()
+bot.db = Database()
 
-@bot.event
-async def on_ready():
-    print(f"Hellfire connected as {bot.user}")
-
-# Load cogs
 initial_cogs = [
     "cogs.cleanup",
     "cogs.config",
-    "cogs.utility"
+    "cogs.utility",
+    "cogs.anti_raid",
+    "cogs.welcome"
 ]
 
-for cog in initial_cogs:
-    bot.load_extension(cog)
+@bot.event
+async def on_ready():
+    print(f"Hellfire online as {bot.user}")
 
-bot.run(TOKEN)
+async def main():
+    for cog in initial_cogs:
+        bot.load_extension(cog)
+
+    bot.loop.create_task(auto_clean_loop(bot))
+
+    await bot.start(TOKEN)
+
+asyncio.run(main())

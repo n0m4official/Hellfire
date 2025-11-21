@@ -1,40 +1,37 @@
 import nextcord
 from nextcord.ext import commands
-from database import Database
+from datetime import datetime, timedelta
 
 class Cleanup(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.db: Database = bot.db if hasattr(bot, "db") else Database()
 
     @nextcord.slash_command(
         name="purgenoroles",
-        description="Remove users with no member role assigned."
+        description="Remove users who do not have the configured member role."
     )
     async def purgenoroles(self, interaction: nextcord.Interaction):
         if not interaction.user.guild_permissions.administrator:
             return await interaction.response.send_message(
-                "You need admin permissions to launch cleanup.", ephemeral=True)
+                "You must be an admin to use this.", ephemeral=True)
 
         await interaction.response.defer(ephemeral=True)
 
         guild = interaction.guild
-        member_role_id = self.db.get_member_role(guild.id)
+        config = self.bot.db.get_config(guild.id)
 
-        if not member_role_id:
+        if not config or not config[0]:
             return await interaction.followup.send(
-                "No member role configured! Use `/setmemberrole` first.", ephemeral=True)
+                "No member role set! Use `/setmemberrole` first.", ephemeral=True)
 
-        member_role = guild.get_role(member_role_id)
+        member_role = guild.get_role(config[0])
         removed = 0
 
         for member in guild.members:
             if member.bot:
                 continue
-
             if member_role in member.roles:
                 continue
-
             try:
                 await member.kick(reason="No member role (Hellfire cleanup)")
                 removed += 1
@@ -42,11 +39,63 @@ class Cleanup(commands.Cog):
                 pass
 
         await interaction.followup.send(
-            f"Cleanup complete! ✨ Hellfire successfully removed **{removed}** accounts.",
+            f"Cleanup complete! ✨ Removed **{removed}** accounts.", ephemeral=True
+        )
+
+    @nextcord.slash_command(
+        name="purgeinactive",
+        description="Remove users inactive for X days without storing user data."
+    )
+    async def purgeinactive(self, interaction: nextcord.Interaction, days: int):
+        if not interaction.user.guild_permissions.administrator:
+            return await interaction.response.send_message(
+                "You must be an admin.", ephemeral=True)
+
+        await interaction.response.defer(ephemeral=True)
+
+        cutoff = datetime.utcnow() - timedelta(days=days)
+        removed = 0
+
+        for member in interaction.guild.members:
+            if member.bot:
+                continue
+
+            if member.activity or member.status != nextcord.Status.offline:
+                continue
+
+            joined = member.joined_at
+            if joined and joined < cutoff:
+                try:
+                    await member.kick(reason=f"Inactive for {days}+ days")
+                    removed += 1
+                except:
+                    pass
+
+        await interaction.followup.send(
+            f"Inactive purge complete! ✨ Removed **{removed}** users.",
             ephemeral=True
         )
 
+    async def perform_auto_cleanup(self, guild):
+        config = self.bot.db.get_config(guild.id)
+        if not config:
+            return
+
+        member_role_id, inactive_days, enabled, _ = config
+
+        if not enabled:
+            return
+
+        cutoff = datetime.utcnow() - timedelta(days=inactive_days)
+
+        for member in guild.members:
+            if member.bot:
+                continue
+            if member.joined_at and member.joined_at < cutoff:
+                try:
+                    await member.kick(reason="Auto-clean inactive")
+                except:
+                    pass
+
 def setup(bot):
-    if not hasattr(bot, "db"):
-        bot.db = Database()
     bot.add_cog(Cleanup(bot))
