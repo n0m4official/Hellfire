@@ -17,16 +17,18 @@ bot = commands.Bot(intents=intents)
 bot.db = Database()
 
 initial_cogs = [
-    "cogs/cleanup.py",
-    "cogs/config.py",
-    "cogs/utility.py",
-    "cogs/anti_raid.py",
-    "cogs/welcome.py"
+    "cogs.cleanup",
+    "cogs.config",
+    "cogs.utility",
+    "cogs.anti_raid",
+    "cogs.welcome"
 ]
 
 @bot.event
 async def on_ready():
     print(f"Hellfire online as {bot.user}")
+    synced = await bot.sync_application_commands()
+    print(f"Synced {len(synced)} slash commands.")
 
 async def main():
     for cog in initial_cogs:
