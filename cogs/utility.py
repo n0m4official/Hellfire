@@ -20,5 +20,39 @@ class Utility(commands.Cog):
             "Shutting down... goodnight ✨", ephemeral=True)
         await self.bot.close()
 
+    @nextcord.slash_command(name="restart", description="Restart Hellfire (bot owner only).")
+    async def restart(self, interaction: nextcord.Interaction):
+        if interaction.user.id != self.bot.owner_id:
+            return await interaction.response.send_message(
+                "Only my creator can restart me. 💫", ephemeral=True)
+
+        await interaction.response.send_message(
+            "Restarting... be right back! ✨", ephemeral=True)
+        await self.bot.close()
+
+    @nextcord.slash_command(name="reload", description="Reload all cogs (bot owner only).")
+    async def reload(self, interaction: nextcord.Interaction):
+        if interaction.user.id != self.bot.owner_id:
+            return await interaction.response.send_message(
+                "Only my creator can reload me. 💫", ephemeral=True)
+
+        reloaded = []
+        failed = []
+
+        for ext in list(self.bot.extensions.keys()):
+            try:
+                self.bot.reload_extension(ext)
+                reloaded.append(ext)
+            except Exception as e:
+                failed.append(f"{ext}: {e}")
+
+        msg = f"🔄 Reloaded {len(reloaded)} modules.\n"
+        if failed:
+            msg += "\n❌ Failed:\n" + "\n".join(failed)
+
+        await interaction.response.send_message(msg, ephemeral=True)
+
+
+
 def setup(bot):
     bot.add_cog(Utility(bot))

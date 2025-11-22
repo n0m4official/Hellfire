@@ -15,6 +15,7 @@ TOKEN = os.getenv("DISCORD_TOKEN")
 
 intents = nextcord.Intents.default()
 intents.members = True
+intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, activity=nextcord.Game(name="with Hellfire 🔥"))
 bot.db = Database()
@@ -31,7 +32,7 @@ initial_cogs = [
     "cogs.anti_raid",
     "cogs.welcome",
     "cogs.assistance",
-    "cogs.silly"
+    "cogs.anime_cog"
 ]
 
 def get_quote():
