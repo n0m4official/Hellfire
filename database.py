@@ -1,5 +1,13 @@
 import sqlite3
 
+# Really basic database wrapper for server configurations 
+# Uses SQLite for simplicity and ease of use
+# Stores member role, inactive days, auto-clean status, and welcome channel
+# Provides methods to get and set these configurations
+# Designed to be straightforward and easy to integrate with the bot
+# Kinda unnessary complexity for small bots, but useful for this one
+# Kudos to SQLite for making database management so accessible
+
 class Database:
     def __init__(self, path="hellfire.db"):
         self.con = sqlite3.connect(path)

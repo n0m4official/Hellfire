@@ -3,6 +3,16 @@ from nextcord.ext import commands
 from nextcord import SlashOption
 from .anime_api import AnimeAPI
 
+# This file causes me so much pain -_-
+# Spent hours debugging issues with fields being None and crashing the bot
+# Also had to implement pagination for search results, which took way longer than expected
+# Nextcord's UI system is powerful but can be complex to work with correctly
+# Kudos to their devs for making it possible, but damn it was a headache to get right
+
+# Pagination View for multiple results
+# Allows users to navigate through multiple embeds using buttons
+# Handles timeouts and disables buttons after inactivity
+
 class PagedView(nextcord.ui.View):
     def __init__(self, pages, timeout=120):
         super().__init__(timeout=timeout)
@@ -34,6 +44,9 @@ class AnimeCog(commands.Cog):
         self.bot = bot
         self.api = AnimeAPI()
 
+    # Without this, fields with None values cause the bot to crash
+    # I spent far too long debugging this issue -_-
+    # This thing, made me want to punch my monitor...
     def safe(self, value):
       return value if value not in (None, "") else "Unknown"
 

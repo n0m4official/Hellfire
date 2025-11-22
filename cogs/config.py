@@ -1,6 +1,23 @@
 import nextcord
 from nextcord.ext import commands
 
+# Config Cog for setting member role
+# Used in cleanup operations
+# Allows admins to define which role is considered 'member'
+# This is important for bots that perform member management tasks
+# such as auto-cleanup of inactive members
+# Provides a slash command to set the member role
+# Stores the role ID in the bot's database for later use
+# Ensures only admins can use the command
+# Sends confirmation message upon successful update
+# Utilizes ephemeral messages for privacy
+# Integrates with the bot's existing database methods
+# Designed to be simple and straightforward for ease of use
+# Kudos to nextcord for making slash command implementation easy
+
+# Also, why was this the easiest cog to implement correctly? -_-
+# No seriously, this took me like 10 minutes to code and test compared to hours for other cogs, why was this so easy???
+
 class Config(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

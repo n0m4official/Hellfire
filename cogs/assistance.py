@@ -1,6 +1,14 @@
 import nextcord
 from nextcord.ext import commands
 
+# Assistance cog providing help command
+# Provides users with a list of available commands and their descriptions
+# Helps users understand how to interact with the bot
+
+# Pretty straightforward cog
+# Just a simple help command to improve user experience
+# Pretty obvious implementation and why it's needed
+
 class Assistance(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -18,6 +26,10 @@ class Assistance(commands.Cog):
             "/test - Check if the bot is online.\n"
             "/shutdown - Shutdown the bot (Owner only).\n"
             "/inspire - Get an inspirational quote.\n"
+            "/anime - Search for anime information.\n"
+            "/manga - Search for manga information.\n"
+            "/purgenoroles - Remove users without the member role (Admin only).\n"
+            "/purgeinactive - Remove inactive users (Admin only).\n"
         )
         await interaction.response.send_message(help_message, ephemeral=True)
 

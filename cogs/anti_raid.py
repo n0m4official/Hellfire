@@ -2,6 +2,14 @@ import nextcord
 from nextcord.ext import commands
 from datetime import datetime, timedelta
 
+# Threw this together quickly
+# Basic anti-raid detection based on join rates
+# If more than 5 members join within 2 minutes, it flags a potential raid
+# Sends a warning message to the system channel
+
+# Kinda made it last minute, but hey it works
+# Not super sophisticated, but should help catch basic raid attempts
+
 class AntiRaid(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

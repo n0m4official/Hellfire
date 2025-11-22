@@ -1,6 +1,14 @@
 import nextcord
 from nextcord.ext import commands
 
+# Welcome cog to handle welcome messages
+# Allows admins to set a welcome channel
+# Sends a welcome message when a new member joins
+# Simple and straightforward implementation
+
+# Not necessary tbh, but nice to have for community servers
+# Threw it in bc why not - adds a bit of flair to the bot (also because a server owner requested it)
+
 class Welcome(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

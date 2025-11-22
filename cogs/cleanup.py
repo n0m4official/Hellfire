@@ -2,6 +2,19 @@ import nextcord
 from nextcord.ext import commands
 from datetime import datetime, timedelta
 
+# Cleanup Cog for removing users without roles or inactive users
+# Provides commands for admins to manage server membership
+# Includes purging users without the configured member role
+# and purging users inactive for a specified number of days
+# Also supports automatic cleanup based on server configuration
+# Integrates with the bot's existing database methods
+# Ensures only admins can use the cleanup commands
+
+# This was the original use case for the bot
+# So this cog is pretty important for the bot's core functionality
+# This one was fairly straightforward to implement compared to others
+# Also shockingly easy to code, worked first try with 0 bugs -_- (which is kinda sus tbh)
+
 class Cleanup(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

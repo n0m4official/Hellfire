@@ -1,6 +1,13 @@
 import nextcord
 from nextcord.ext import commands
 
+
+# half of these just refused to work until I rebooted my laptop, like why did doing THAT fix it???
+# REMINDER: 
+#           DO NOT FUCKING TOUCH THIS FILE AGAIN I SWEAR TO GOD
+#           IT WORKS NOW AND I DONT WANT TO SPEND ANOTHER 5 HOURS DEBUGGING THIS BULLSHIT
+# sorry for my crash out, was frustrated and this file probably caused me the most issues today
+
 class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

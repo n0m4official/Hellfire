@@ -1,5 +1,29 @@
 import aiohttp
 
+# This class handles all interactions with external anime/manga APIs
+# Currently supports AniList, Jikan (MyAnimeList), and MangaDex
+# Does not store any user data
+# API documentation:
+# AniList: https://anilist.github.io/ApiV2-GraphQL-Docs
+# Jikan: https://docs.api.jikan.moe/
+# MangaDex: https://api.mangadex.org/docs/v2/
+
+# Note: Rate limiting is not handled here; users of this class should implement their own rate limiting if necessary
+# This class uses aiohttp for asynchronous HTTP requests
+# Ensure to close the aiohttp session when done using the close() method
+# Example usage:
+# api = AnimeAPI()
+
+# This file was created to modularize API interactions for better maintainability and readability
+# And caused me so much pain to implement correctly... I spent way too long debugging issues with aiohttp requests, JSON parsing, and GraphQL queries
+# The worst part was that some of the issues only manifested under certain conditions, making them hard to track down
+# FOR SOME REASON THE APIS WOULD JUST STOP RESPONDING AT RANDOM TIMES??? LIKE WHAT THE HELL???
+# sidenotes: 
+#           WHY DO THE APIS USE DIFFERENT FORMATS??? LIKE ANI LIST USES GRAPHQL WHILE JIKAN AND MANGADEX USE REST????
+#           WHY DO THE APIS NOT RECOGNIZE TAGS VS GENRES CONSISTENTLY??? LIKE ANI LIST USES TAGS BUT MANGADEX USES GENRES???
+#           WHY DO I HAVE TO SPEND 10 HOURS JUST TO GET A BASIC IMPLEMENTATION OF THIS???
+
+
 class AnimeAPI:
     BASE_ANILIST = "https://graphql.anilist.co"
     BASE_JIKAN = "https://api.jikan.moe/v4"
