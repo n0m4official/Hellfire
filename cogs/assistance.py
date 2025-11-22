@@ -17,7 +17,9 @@ class Assistance(commands.Cog):
             "/setmemberrole - Define the member role for cleanup (Admin only).\n"
             "/test - Check if the bot is online.\n"
             "/shutdown - Shutdown the bot (Owner only).\n"
+            "/inspire - Get an inspirational quote.\n"
         )
         await interaction.response.send_message(help_message, ephemeral=True)
+
 def setup(bot):
     bot.add_cog(Assistance(bot))
