@@ -36,6 +36,24 @@ class Config(commands.Cog):
         await interaction.response.send_message(
             f"Member role updated to **{role.name}**.", ephemeral=True
         )
+    
+    @nextcord.slash_command(
+    name="setstatuschannel",
+    description="Set the channel Hellfire uses for online/offline announcements."
+    )
+    async def setstatuschannel(self, interaction: nextcord.Interaction,
+                            channel: nextcord.TextChannel):
+
+        if not interaction.user.guild_permissions.administrator:
+            return await interaction.response.send_message(
+                "Admin only.", ephemeral=True)
+
+        self.bot.db.set_status_channel(interaction.guild.id, channel.id)
+
+        await interaction.response.send_message(
+            f"Status channel set to {channel.mention}.", ephemeral=True
+        )
+
 
 def setup(bot):
     bot.add_cog(Config(bot))

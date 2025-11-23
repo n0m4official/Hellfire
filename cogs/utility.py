@@ -1,12 +1,7 @@
+import os
 import nextcord
 from nextcord.ext import commands
 
-
-# half of these just refused to work until I rebooted my laptop, like why did doing THAT fix it???
-# REMINDER: 
-#           DO NOT FUCKING TOUCH THIS FILE AGAIN I SWEAR TO GOD
-#           IT WORKS NOW AND I DONT WANT TO SPEND ANOTHER 5 HOURS DEBUGGING THIS BULLSHIT
-# sorry for my crash out, was frustrated and this file probably caused me the most issues today
 
 class Utility(commands.Cog):
     def __init__(self, bot):
@@ -23,8 +18,12 @@ class Utility(commands.Cog):
             return await interaction.response.send_message(
                 "Only my creator can shut me down. 💫", ephemeral=True)
 
+        # Announce offline to all servers
+        await announce_offline(self.bot)
+
         await interaction.response.send_message(
             "Shutting down... goodnight ✨", ephemeral=True)
+
         await self.bot.close()
 
     @nextcord.slash_command(name="restart", description="Restart Hellfire (bot owner only).")
@@ -33,8 +32,12 @@ class Utility(commands.Cog):
             return await interaction.response.send_message(
                 "Only my creator can restart me. 💫", ephemeral=True)
 
+        # Announce offline to all servers
+        await announce_offline(self.bot)
+
         await interaction.response.send_message(
             "Restarting... be right back! ✨", ephemeral=True)
+
         await self.bot.close()
 
     @nextcord.slash_command(name="reload", description="Reload all cogs (bot owner only).")
@@ -59,6 +62,26 @@ class Utility(commands.Cog):
 
         await interaction.response.send_message(msg, ephemeral=True)
 
+
+async def announce_offline(bot):
+    """Send offline message to all servers using their configured status channel."""
+    for guild in bot.guilds:
+        config = bot.db.get_config(guild.id)
+        
+        # status_channel_id is config[4]
+        status_channel_id = None
+        if config and len(config) >= 5 and config[4]:
+            status_channel_id = config[4]
+        elif guild.system_channel:
+            status_channel_id = guild.system_channel.id
+
+        if status_channel_id:
+            channel = guild.get_channel(status_channel_id)
+            if channel:
+                try:
+                    await channel.send("⚠️ **Hellfire is going offline.** She’ll be back soon.")
+                except:
+                    pass
 
 
 def setup(bot):

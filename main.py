@@ -17,11 +17,16 @@ intents = nextcord.Intents.default()
 intents.members = True
 intents.message_content = True
 
+# REMINDER:
+#          DO NOT FUCKING TOUCH LINES 23 -> 28
+#          DO NOT TOUCH THE ARCHITECHTURE, I SWEAR IF I HAVE TO REBUILD IT AGAIN... -_-
 bot = commands.Bot(command_prefix="!", intents=intents, activity=nextcord.Game(name="with Hellfire 🔥"))
 bot.db = Database()
 
 owner_id = int(os.getenv("BOT_OWNER_ID"))
 bot.owner_id = owner_id
+
+# Also, fuck you pylint, my lines are a reasonable length!
 
 bot.synced = False
 
@@ -57,9 +62,26 @@ async def inspire(interaction: nextcord.Interaction):
 async def on_ready():
     print(f"Hellfire online as {bot.user}")
 
-    # Sync only once
-    # we do this to avoid rate limits and long startup times
-    # also, why the hell does nextcord not have a built-in way to do this???
+    # Send online announcement to each server
+    for guild in bot.guilds:
+        config = bot.db.get_config(guild.id)
+
+        # status channel is config[4]
+        status_channel_id = None
+        if config and len(config) >= 5 and config[4]:
+            status_channel_id = config[4]
+        elif guild.system_channel:
+            status_channel_id = guild.system_channel.id
+
+        if status_channel_id:
+            channel = guild.get_channel(status_channel_id)
+            if channel:
+                try:
+                    await channel.send("🔥 **Hellfire is now online!**")
+                except:
+                    pass
+
+    # Sync slash commands
     if not bot.synced:
         await bot.sync_application_commands()
         bot.synced = True

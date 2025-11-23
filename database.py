@@ -13,7 +13,6 @@ class Database:
         self.con = sqlite3.connect(path)
         self.cur = self.con.cursor()
         self.setup()
-
     def setup(self):
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS server_config (
@@ -26,9 +25,17 @@ class Database:
         """)
         self.con.commit()
 
+        # Add new column if missing
+        try:
+            self.cur.execute("ALTER TABLE server_config ADD COLUMN status_channel_id INTEGER")
+            self.con.commit()
+        except sqlite3.OperationalError:
+            # Column already exists
+            pass
+
     def get_config(self, guild_id):
         row = self.cur.execute("""
-            SELECT member_role_id, inactive_days, auto_clean_enabled, welcome_channel_id
+            SELECT member_role_id, inactive_days, auto_clean_enabled, welcome_channel_id, status_channel_id
             FROM server_config WHERE guild_id = ?
         """, (guild_id,)).fetchone()
         return row
@@ -64,3 +71,12 @@ class Database:
         ON CONFLICT(guild_id) DO UPDATE SET welcome_channel_id=excluded.welcome_channel_id
         """, (guild_id, channel_id))
         self.con.commit()
+
+    def set_status_channel(self, guild_id, channel_id):
+        self.cur.execute("""
+        INSERT INTO server_config (guild_id, status_channel_id)
+        VALUES (?, ?)
+        ON CONFLICT(guild_id) DO UPDATE SET status_channel_id=excluded.status_channel_id
+        """, (guild_id, channel_id))
+        self.con.commit()
+

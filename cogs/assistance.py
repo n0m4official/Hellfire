@@ -30,6 +30,8 @@ class Assistance(commands.Cog):
             "/manga - Search for manga information.\n"
             "/purgenoroles - Remove users without the member role (Admin only).\n"
             "/purgeinactive - Remove inactive users (Admin only).\n"
+            "/trending - Displays the current top 10 most popular anime\n"
+            "/character - Search anime characters"
         )
         await interaction.response.send_message(help_message, ephemeral=True)
 
