@@ -94,4 +94,6 @@ async def main():
     bot.loop.create_task(auto_clean_loop(bot))
     await bot.start(TOKEN)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    bot.loop.create_task(auto_clean_loop(bot))
+    bot.run(TOKEN)
